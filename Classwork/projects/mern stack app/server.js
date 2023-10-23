@@ -1,6 +1,9 @@
-const express = require("express");
+const express = require('express');
+//used for building rest apis
 const bodyParser = require("body-parser");
+//helps parse request and create the req.body object
 const cors = require("cors");
+//provides express middleware to enable cors with various options
 
 const app = express();
 
@@ -34,6 +37,8 @@ db.mongoose
 app.get("/", (req, res) => {
   res.json({ message: "Welcome to bezkoder application." });
 });
+
+require("./routes/tutorial.routes")(app);
 
 // set port, listen for requests
 const PORT = process.env.PORT || 8080;
