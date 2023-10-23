@@ -5,10 +5,10 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 //provides express middleware to enable cors with various options
 
-const app = express();
+const app = express()
 
 var corsOptions = {
-  origin: "http://localhost:8081",
+    origin: "http://localhost:8001"
 };
 
 app.use(cors(corsOptions));
@@ -19,19 +19,18 @@ app.use(bodyParser.json());
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: true }));
 
-const db = require("./app/models");
-db.mongoose
-  .connect(db.url, {
+const db = require("./models")
+db.mongoose.connect(db.url,{
     useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
-  .then(() => {
-    console.log("Connected to the database!");
-  })
-  .catch((err) => {
+    useUnifiedTopology: true
+})
+.then(()=>{
+    console.log("Connected to the database!")
+})
+.catch(err=>{
     console.log("Cannot connect to the database!", err);
     process.exit();
-  });
+});
 
 // simple route
 app.get("/", (req, res) => {
