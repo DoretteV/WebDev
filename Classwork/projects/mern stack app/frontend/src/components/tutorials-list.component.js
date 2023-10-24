@@ -1,75 +1,96 @@
 import React, { Component } from "react";
-import { connect } from "react-redux";
-import {
-  retrieveTutorials,
-  findTutorialsByTitle,
-  deleteAllTutorials,
-} from "../actions/tutorials";
+import TutorialDataService from "../services/tutorial.service";
 import { Link } from "react-router-dom";
 
-class TutorialsList extends Component {
+export default class TutorialsList extends Component {
   constructor(props) {
     super(props);
     this.onChangeSearchTitle = this.onChangeSearchTitle.bind(this);
-    this.refreshData = this.refreshData.bind(this);
+    this.retrieveTutorials = this.retrieveTutorials.bind(this);
+    this.refreshList = this.refreshList.bind(this);
     this.setActiveTutorial = this.setActiveTutorial.bind(this);
-    this.findByTitle = this.findByTitle.bind(this);
     this.removeAllTutorials = this.removeAllTutorials.bind(this);
+    this.searchTitle = this.searchTitle.bind(this);
 
     this.state = {
+      tutorials: [],
       currentTutorial: null,
       currentIndex: -1,
-      searchTitle: "",
+      searchTitle: ""
     };
   }
 
   componentDidMount() {
-    this.props.retrieveTutorials();
+    this.retrieveTutorials();
   }
 
   onChangeSearchTitle(e) {
     const searchTitle = e.target.value;
 
     this.setState({
-      searchTitle: searchTitle,
+      searchTitle: searchTitle
     });
   }
 
-  refreshData() {
+  retrieveTutorials() {
+    TutorialDataService.getAll()
+      .then(response => {
+        this.setState({
+          tutorials: response.data
+        });
+        console.log(response.data);
+      })
+      .catch(e => {
+        console.log(e);
+      });
+  }
+
+  refreshList() {
+    this.retrieveTutorials();
     this.setState({
       currentTutorial: null,
-      currentIndex: -1,
+      currentIndex: -1
     });
   }
 
   setActiveTutorial(tutorial, index) {
     this.setState({
       currentTutorial: tutorial,
-      currentIndex: index,
+      currentIndex: index
     });
   }
 
   removeAllTutorials() {
-    this.props
-      .deleteAllTutorials()
-      .then((response) => {
-        console.log(response);
-        this.refreshData();
+    TutorialDataService.deleteAll()
+      .then(response => {
+        console.log(response.data);
+        this.refreshList();
       })
-      .catch((e) => {
+      .catch(e => {
         console.log(e);
       });
   }
 
-  findByTitle() {
-    this.refreshData();
+  searchTitle() {
+    this.setState({
+      currentTutorial: null,
+      currentIndex: -1
+    });
 
-    this.props.findTutorialsByTitle(this.state.searchTitle);
+    TutorialDataService.findByTitle(this.state.searchTitle)
+      .then(response => {
+        this.setState({
+          tutorials: response.data
+        });
+        console.log(response.data);
+      })
+      .catch(e => {
+        console.log(e);
+      });
   }
 
   render() {
-    const { searchTitle, currentTutorial, currentIndex } = this.state;
-    const { tutorials } = this.props;
+    const { searchTitle, tutorials, currentTutorial, currentIndex } = this.state;
 
     return (
       <div className="list row">
@@ -86,7 +107,7 @@ class TutorialsList extends Component {
               <button
                 className="btn btn-outline-secondary"
                 type="button"
-                onClick={this.findByTitle}
+                onClick={this.searchTitle}
               >
                 Search
               </button>
@@ -160,15 +181,3 @@ class TutorialsList extends Component {
     );
   }
 }
-
-const mapStateToProps = (state) => {
-  return {
-    tutorials: state.tutorials,
-  };
-};
-
-export default connect(mapStateToProps, {
-  retrieveTutorials,
-  findTutorialsByTitle,
-  deleteAllTutorials,
-})(TutorialsList);

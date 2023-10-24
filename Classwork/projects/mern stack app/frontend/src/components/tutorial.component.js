@@ -1,7 +1,6 @@
 import React, { Component } from "react";
-import { connect } from "react-redux";
-import { updateTutorial, deleteTutorial } from "../actions/tutorials";
 import TutorialDataService from "../services/tutorial.service";
+import { withRouter } from '../common/with-router';
 
 class Tutorial extends Component {
   constructor(props) {
@@ -9,109 +8,108 @@ class Tutorial extends Component {
     this.onChangeTitle = this.onChangeTitle.bind(this);
     this.onChangeDescription = this.onChangeDescription.bind(this);
     this.getTutorial = this.getTutorial.bind(this);
-    this.updateStatus = this.updateStatus.bind(this);
-    this.updateContent = this.updateContent.bind(this);
-    this.removeTutorial = this.removeTutorial.bind(this);
+    this.updatePublished = this.updatePublished.bind(this);
+    this.updateTutorial = this.updateTutorial.bind(this);
+    this.deleteTutorial = this.deleteTutorial.bind(this);
 
     this.state = {
       currentTutorial: {
         id: null,
         title: "",
         description: "",
-        published: false,
+        published: false
       },
-      message: "",
+      message: ""
     };
   }
 
   componentDidMount() {
-    this.getTutorial(this.props.match.params.id);
+    this.getTutorial(this.props.router.params.id);
   }
 
   onChangeTitle(e) {
     const title = e.target.value;
 
-    this.setState(function (prevState) {
+    this.setState(function(prevState) {
       return {
         currentTutorial: {
           ...prevState.currentTutorial,
-          title: title,
-        },
+          title: title
+        }
       };
     });
   }
 
   onChangeDescription(e) {
     const description = e.target.value;
-
-    this.setState((prevState) => ({
+    
+    this.setState(prevState => ({
       currentTutorial: {
         ...prevState.currentTutorial,
-        description: description,
-      },
+        description: description
+      }
     }));
   }
 
   getTutorial(id) {
     TutorialDataService.get(id)
-      .then((response) => {
+      .then(response => {
         this.setState({
-          currentTutorial: response.data,
+          currentTutorial: response.data
         });
         console.log(response.data);
       })
-      .catch((e) => {
+      .catch(e => {
         console.log(e);
       });
   }
 
-  updateStatus(status) {
+  updatePublished(status) {
     var data = {
       id: this.state.currentTutorial.id,
       title: this.state.currentTutorial.title,
       description: this.state.currentTutorial.description,
-      published: status,
+      published: status
     };
 
-    this.props
-      .updateTutorial(this.state.currentTutorial.id, data)
-      .then((reponse) => {
-        console.log(reponse);
-
-        this.setState((prevState) => ({
+    TutorialDataService.update(this.state.currentTutorial.id, data)
+      .then(response => {
+        this.setState(prevState => ({
           currentTutorial: {
             ...prevState.currentTutorial,
-            published: status,
-          },
+            published: status
+          }
         }));
-
-        this.setState({ message: "The status was updated successfully!" });
+        console.log(response.data);
       })
-      .catch((e) => {
+      .catch(e => {
         console.log(e);
       });
   }
 
-  updateContent() {
-    this.props
-      .updateTutorial(this.state.currentTutorial.id, this.state.currentTutorial)
-      .then((reponse) => {
-        console.log(reponse);
-        
-        this.setState({ message: "The tutorial was updated successfully!" });
+  updateTutorial() {
+    TutorialDataService.update(
+      this.state.currentTutorial.id,
+      this.state.currentTutorial
+    )
+      .then(response => {
+        console.log(response.data);
+        this.setState({
+          message: "The tutorial was updated successfully!"
+        });
       })
-      .catch((e) => {
+      .catch(e => {
         console.log(e);
       });
   }
 
-  removeTutorial() {
-    this.props
-      .deleteTutorial(this.state.currentTutorial.id)
-      .then(() => {
-        this.props.history.push("/tutorials");
+  deleteTutorial() {    
+    TutorialDataService.delete(this.state.currentTutorial.id)
+      .then(response => {
+        console.log(response.data);
+        this.props.router.navigate('/tutorials');
       })
-      .catch((e) => {
+      .catch(e => {
         console.log(e);
       });
   }
@@ -157,14 +155,14 @@ class Tutorial extends Component {
             {currentTutorial.published ? (
               <button
                 className="badge badge-primary mr-2"
-                onClick={() => this.updateStatus(false)}
+                onClick={() => this.updatePublished(false)}
               >
                 UnPublish
               </button>
             ) : (
               <button
                 className="badge badge-primary mr-2"
-                onClick={() => this.updateStatus(true)}
+                onClick={() => this.updatePublished(true)}
               >
                 Publish
               </button>
@@ -172,7 +170,7 @@ class Tutorial extends Component {
 
             <button
               className="badge badge-danger mr-2"
-              onClick={this.removeTutorial}
+              onClick={this.deleteTutorial}
             >
               Delete
             </button>
@@ -180,7 +178,7 @@ class Tutorial extends Component {
             <button
               type="submit"
               className="badge badge-success"
-              onClick={this.updateContent}
+              onClick={this.updateTutorial}
             >
               Update
             </button>
@@ -197,4 +195,4 @@ class Tutorial extends Component {
   }
 }
 
-export default connect(null, { updateTutorial, deleteTutorial })(Tutorial);
+export default withRouter(Tutorial);

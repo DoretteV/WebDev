@@ -1,8 +1,7 @@
 import React, { Component } from "react";
-import { connect } from "react-redux";
-import { createTutorial } from "../actions/tutorials";
+import TutorialDataService from "../services/tutorial.service";
 
-class AddTutorial extends Component {
+export default class AddTutorial extends Component {
   constructor(props) {
     super(props);
     this.onChangeTitle = this.onChangeTitle.bind(this);
@@ -13,42 +12,44 @@ class AddTutorial extends Component {
     this.state = {
       id: null,
       title: "",
-      description: "",
+      description: "", 
       published: false,
 
-      submitted: false,
+      submitted: false
     };
   }
 
   onChangeTitle(e) {
     this.setState({
-      title: e.target.value,
+      title: e.target.value
     });
   }
 
   onChangeDescription(e) {
     this.setState({
-      description: e.target.value,
+      description: e.target.value
     });
   }
 
   saveTutorial() {
-    const { title, description } = this.state;
+    var data = {
+      title: this.state.title,
+      description: this.state.description
+    };
 
-    this.props
-      .createTutorial(title, description)
-      .then((data) => {
+    TutorialDataService.create(data)
+      .then(response => {
         this.setState({
-          id: data.id,
-          title: data.title,
-          description: data.description,
-          published: data.published,
+          id: response.data.id,
+          title: response.data.title,
+          description: response.data.description,
+          published: response.data.published,
 
-          submitted: true,
+          submitted: true
         });
-        console.log(data);
+        console.log(response.data);
       })
-      .catch((e) => {
+      .catch(e => {
         console.log(e);
       });
   }
@@ -60,7 +61,7 @@ class AddTutorial extends Component {
       description: "",
       published: false,
 
-      submitted: false,
+      submitted: false
     });
   }
 
@@ -111,5 +112,3 @@ class AddTutorial extends Component {
     );
   }
 }
-
-export default connect(null, { createTutorial })(AddTutorial);

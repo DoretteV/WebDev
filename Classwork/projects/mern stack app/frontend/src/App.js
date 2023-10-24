@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { BrowserRouter as Routes, Route, Link } from "react-router-dom";
+import { Routes, Route, Link } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 
@@ -12,9 +12,9 @@ class App extends Component {
     return (
       <div>
         <nav className="navbar navbar-expand navbar-dark bg-dark">
-          <a href="/tutorials" className="navbar-brand">
-            Create Tutorials
-          </a>
+          <Link to={"/tutorials"} className="navbar-brand">
+            bezKoder
+          </Link>
           <div className="navbar-nav mr-auto">
             <li className="nav-item">
               <Link to={"/tutorials"} className="nav-link">
@@ -31,10 +31,10 @@ class App extends Component {
 
         <div className="container mt-3">
           <Routes>
-            <Route path="/" element={<TutorialsList />} />
-            <Route path="/tutorials" element={<TutorialsList />} />
-            <Route path="/add" element={<AddTutorial />} />
-            <Route path="/tutorials/:id" element={<Tutorial />} />
+            <Route path="/" element={<TutorialsList/>} />
+            <Route path="/tutorials" element={<TutorialsList/>} />
+            <Route path="/add" element={<AddTutorial/>} />
+            <Route path="/tutorials/:id" element={<Tutorial/>} />
           </Routes>
         </div>
       </div>

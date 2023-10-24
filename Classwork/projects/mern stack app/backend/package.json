@@ -1,11 +1,10 @@
 {
-  "name": "mern-stack-app",
+  "name": "tutorialapp",
   "version": "1.0.0",
-  "description": "",
+  "description": "Node.js Restful CRUD API with Node.js, Express and MongoDB",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
     "nodejs",
