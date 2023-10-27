@@ -18,11 +18,11 @@ const Home = (props) => {
 
   const logout = () => {
     localStorage.removeItem("token");
-    props.history("/login");
+    props.history.push("/login");
   };
 
   if (!localStorage.getItem("token")) {
-    props.history("/login");
+    props.history.push("/login");
   }
   return (
     <div className="m-5">

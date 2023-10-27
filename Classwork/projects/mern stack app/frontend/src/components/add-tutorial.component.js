@@ -24,6 +24,7 @@ export default class AddTutorial extends Component {
       title: e.target.value,
     });
   }
+
   onChangeDescription(e) {
     this.setState({
       description: e.target.value,
@@ -52,6 +53,7 @@ export default class AddTutorial extends Component {
         console.log(e);
       });
   }
+
   newTutorial() {
     this.setState({
       id: null,
@@ -87,6 +89,7 @@ export default class AddTutorial extends Component {
                 name="title"
               />
             </div>
+            
             <div className="form-group">
               <label htmlFor="description">Description</label>
               <input

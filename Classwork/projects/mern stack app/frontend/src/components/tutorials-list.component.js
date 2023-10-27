@@ -51,6 +51,7 @@ export default class TutorialsList extends Component {
       currentIndex: -1,
     });
   }
+
   setActiveTutorial(tutorial, index) {
     this.setState({
       currentTutorial: tutorial,
@@ -68,7 +69,13 @@ export default class TutorialsList extends Component {
         console.log(e);
       });
   }
+
   searchTitle() {
+    this.setState({
+      currentTutorial: null,
+      currentIndex: -1
+    });
+    
     TutorialDataService.findByTitle(this.state.searchTitle)
       .then((response) => {
         this.setState({
