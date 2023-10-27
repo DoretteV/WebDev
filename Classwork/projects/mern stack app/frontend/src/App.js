@@ -13,7 +13,7 @@ class App extends Component {
       <div>
         <nav className="navbar navbar-expand navbar-dark bg-dark">
           <Link to={"/tutorials"} className="navbar-brand">
-            bezKoder
+            Tutorial App
           </Link>
           <div className="navbar-nav mr-auto">
             <li className="nav-item">
@@ -31,10 +31,10 @@ class App extends Component {
 
         <div className="container mt-3">
           <Routes>
-            <Route path="/" element={<TutorialsList />} />
-            <Route path="/tutorials" element={<TutorialsList />} />
-            <Route path="/add" element={<AddTutorial />} />
-            <Route path="/tutorials/:id" element={<Tutorial />} />
+            <Route path="/" element={<TutorialsList/>} />
+            <Route path="/tutorials" element={<TutorialsList/>} />
+            <Route path="/add" element={<AddTutorial/>} />
+            <Route path="/tutorials/:id" element={<Tutorial/>} />
           </Routes>
         </div>
       </div>

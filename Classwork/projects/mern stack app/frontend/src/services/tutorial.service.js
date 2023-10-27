@@ -38,4 +38,5 @@ findByTitle(title) {
 }
 }
 
-export default new TutorialDataService();
+const tutorialDataService = new TutorialDataService();
+export default tutorialDataService;
