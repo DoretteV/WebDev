@@ -3,6 +3,7 @@ const app = express();
 const mongoose = require("mongoose");
 require("dotenv").config();
 const cors = require("cors");
+const path = require('path')
 
 //Connect DB
 mongoose
@@ -13,11 +14,19 @@ mongoose
   .then(() => console.log("mongoDB is connected"))
   .catch((err) => console.log(err));
 
-app.use(cors());
-app.use(express.json());
-
-app.use("/auth", require("./routes/user"));
-
-const PORT = process.env.PORT || 5000;
-
-app.listen(PORT, () => console.log("Server is running"));
+  app.use(cors());
+  // Body parser
+  app.use(express.json());
+  
+  // Routes
+  app.use("/api/auth", require("./routes/auth"));
+  
+  // Serve static assets (build folder) if in production
+  if (process.env.NODE_ENV === 'production') {
+    // Set static folder
+    app.use(express.static('client/build'));
+  // get anything, load index.html file
+    app.get('*', (req, res) => {
+      res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
+    });
+  }

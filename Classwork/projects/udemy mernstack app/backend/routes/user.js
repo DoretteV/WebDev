@@ -1,10 +1,10 @@
 const router = require("express").Router();
-const bcrypt = require("bcryptjs");
 const User = require("../models/user");
+const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { requireLogin } = require("../middleware/auth");
 
-//Register user
+// Register user
 router.post("/register", async (req, res) => {
   const { name, email, password } = req.body;
   try {
@@ -21,38 +21,51 @@ router.post("/register", async (req, res) => {
     await user.save();
     return res.status(201).json({ message: "User created successfully" });
   } catch (err) {
-    console.log(err);
+    // console.log(err);
+    return res.status(400).json({ error: err.message });
   }
 });
 
-//Login user
+// Login user
 router.post("/login", async (req, res) => {
   const { email, password } = req.body;
   try {
     let user = await User.findOne({ email });
     if (!user) {
-      return res.status(400).json({ error: "Invalid Credentials" });
+      return res.status(400).json({ error: "Invalid credentials" });
     }
+
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return res.status(400).json({ error: "Invalid Credentials" });
+      return res.status(400).json({ error: "Invalid credentials" });
     }
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+
+    const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, {
       expiresIn: "1h",
     });
-    return res.json({ token });
+
+    return res.status(200).json({
+      token,
+      user: {
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+      },
+    });
   } catch (err) {
-    console.log(err.message);
+    // console.log(err);
+    return res.status(400).json({ error: err.message });
   }
 });
 
+// Get logged in user
 router.get("/", requireLogin, async (req, res) => {
-  console.log(req.user);
   try {
-    const user = User.findById(req.user._id).select("-password");
+    const user = await User.findById(req.user._id).select("-password -__v");
     res.json(user);
-  } catch (err) {
-    console.log(err);
+  } catch (error) {
+    // console.log(err);
+    return res.status(400).json({ error: err.message });
   }
 });
 
