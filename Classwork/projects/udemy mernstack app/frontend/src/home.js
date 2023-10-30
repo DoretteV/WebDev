@@ -5,7 +5,7 @@ const Home = (props) => {
   const [user, setUser] = useState(null);
 
   const getUser = async () => {
-    const res = await axios.get("/api/user", {
+    const res = await axios.get("https://authmern-ag95.onrender.com/api/auth", {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
@@ -18,11 +18,11 @@ const Home = (props) => {
 
   const logout = () => {
     localStorage.removeItem("token");
-    props.history("/login");
+    props.history.push("/login");
   };
 
   if (!localStorage.getItem("token")) {
-    props.history("/login");
+    props.history.push("/login");
   }
   return (
     <div className="m-5">

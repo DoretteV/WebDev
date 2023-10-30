@@ -19,7 +19,7 @@ const Login = (props) => {
     try {
       setData({ ...data, error: null });
       const res = await axios.post(
-        "/api/auth/login",
+        "https://authmern-ag95.onrender.com/api/auth/login",
         { email, password },
         {
           headers: {
@@ -28,7 +28,7 @@ const Login = (props) => {
         }
       );
       localStorage.setItem("token", res.data.token);
-      props.history("/");
+      props.history.push("/");
     } catch (err) {
       setData({ ...data, error: err.response.data.error });
     }

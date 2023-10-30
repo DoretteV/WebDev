@@ -20,7 +20,7 @@ const Register = (props) => {
     try {
       setData({ ...data, error: null });
       await axios.post(
-        "/api/auth/register",
+        "https://authmern-ag95.onrender.com/api/auth/register",
         { name, email, password },
         {
           headers: {
@@ -28,7 +28,7 @@ const Register = (props) => {
           },
         }
       );
-      props.history("/login");
+      props.history.push("/login");
     } catch (err) {
       setData({ ...data, error: err.response.data.error });
     }
