@@ -5,7 +5,7 @@ const Home = (props) => {
   const [user, setUser] = useState(null);
 
   const getUser = async () => {
-    const res = await axios.get("/api/auth", {
+    const res = await axios.get("/api/user", {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
@@ -18,11 +18,11 @@ const Home = (props) => {
 
   const logout = () => {
     localStorage.removeItem("token");
-    props.history.push("/login");
+    props.history("/login");
   };
 
   if (!localStorage.getItem("token")) {
-    props.history.push("/login");
+    props.history("/login");
   }
   return (
     <div className="m-5">
